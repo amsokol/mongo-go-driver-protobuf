@@ -1,10 +1,18 @@
 {
     "cSpell.words": [
+        "Fatalf",
+        "Printf",
+        "Uint",
+        "amsokol",
         "bson",
         "bsoncodec",
         "mongodb",
+        "officional",
+        "proto",
         "protobuf",
         "ptypes",
-        "tspb"
+        "struct",
+        "tspb",
+        "unmarshal"
     ]
 }
