@@ -162,7 +162,8 @@ func main() {
 }
 ```
 
-***Note*: the following code is mandatory for MongoDB Go Driver Beta 1 only. It is removed for new coming driver version:**
+> *Note*: the following code is mandatory for MongoDB Go Driver Beta 1 only.
+> It is removed for new coming driver version:
 
 ```go
             TopologyOptions: []topology.Option{
