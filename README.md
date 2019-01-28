@@ -97,15 +97,6 @@ func main() {
     client, err := mongo.NewClientWithOptions("mongodb://localhost:27017",
         &options.ClientOptions{
             Registry: reg,
-            TopologyOptions: []topology.Option{
-                topology.WithServerOptions(func(opts ...topology.ServerOption) []topology.ServerOption {
-                    return []topology.ServerOption{
-                        topology.WithRegistry(func(r *bsoncodec.Registry) *bsoncodec.Registry {
-                            return reg
-                        }),
-                    }
-                }),
-            },
         })
     if err != nil {
         log.Fatalf("failed to create new MongoDB client: %#v", err)
@@ -160,19 +151,4 @@ func main() {
 
     log.Printf("done")
 }
-```
-
-> *Note*: the following code is mandatory for MongoDB Go Driver Beta 1 only.
-> It is removed for new coming driver version:
-
-```go
-            TopologyOptions: []topology.Option{
-                topology.WithServerOptions(func(opts ...topology.ServerOption) []topology.ServerOption {
-                    return []topology.ServerOption{
-                        topology.WithRegistry(func(r *bsoncodec.Registry) *bsoncodec.Registry {
-                            return reg
-                        }),
-                    }
-                }),
-            },
 ```
