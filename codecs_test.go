@@ -1,6 +1,7 @@
 package codecs
 
 import (
+	"encoding/json"
 	"reflect"
 	"testing"
 	"time"
@@ -74,6 +75,24 @@ func TestCodecs(t *testing.T) {
 
 		if !reflect.DeepEqual(in, out) {
 			t.Errorf("failed: in=%#v, out=%#v", in, out)
+			return
+		}
+
+		if b, err = json.Marshal(&in); err != nil {
+			t.Errorf("json.Marshal error = %v", err)
+			return
+		}
+
+		var out2 Data
+		if err = json.Unmarshal(b, &out2); err != nil {
+			t.Errorf("json.Unmarshal error = %v", err)
+			return
+		}
+
+		if !reflect.DeepEqual(in, out2) {
+			t.Errorf("failed: in=%#v, out=%#v", in, out2)
+			return
 		}
 	})
+
 }
