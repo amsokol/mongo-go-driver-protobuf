@@ -9,7 +9,7 @@ import (
 
 // MarshalJSONPB marshals ObjectId to JSONPB string
 func (o *ObjectId) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
-	s, err := m.MarshalToString(&wrappers.StringValue{Value: o.Id})
+	s, err := m.MarshalToString(&wrappers.StringValue{Value: o.Value})
 	if err != nil {
 		return nil, err
 	}
@@ -22,6 +22,6 @@ func (o *ObjectId) UnmarshalJSONPB(m *jsonpb.Unmarshaler, data []byte) error {
 	if err := m.Unmarshal(bytes.NewReader(data), &id); err != nil {
 		return err
 	}
-	o.Id = id.Value
+	o.Value = id.Value
 	return nil
 }

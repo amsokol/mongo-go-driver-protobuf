@@ -112,7 +112,7 @@ type ObjectIDCodec struct {
 func (e *ObjectIDCodec) EncodeValue(ectx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
 	v := val.Interface().(mongodb.ObjectId)
 	// Create primitive.ObjectId from string
-	id, err := primitive.ObjectIDFromHex(v.Id)
+	id, err := primitive.ObjectIDFromHex(v.Value)
 	if err != nil {
 		return err
 	}
@@ -133,7 +133,7 @@ func (e *ObjectIDCodec) DecodeValue(ectx bsoncodec.DecodeContext, vr bsonrw.Valu
 	if err = enc.DecodeValue(ectx, vr, reflect.ValueOf(&id).Elem()); err != nil {
 		return err
 	}
-	oid := mongodb.ObjectId{Id: id.Hex()}
+	oid := mongodb.ObjectId{Value: id.Hex()}
 	if err != nil {
 		return err
 	}

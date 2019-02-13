@@ -43,7 +43,7 @@ func TestCodecs(t *testing.T) {
 			return
 		}
 
-		id := mongodb.ObjectId{Id: "5c601716e1f2d109887d6db2"}
+		id := mongodb.ObjectId{Value: "5c601716e1f2d109887d6db2"}
 
 		in := Data{
 			BoolValue:   &wrappers.BoolValue{Value: true},
