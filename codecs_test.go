@@ -9,6 +9,8 @@ import (
 	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/mongodb/mongo-go-driver/bson"
+
+	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
 )
 
 func TestCodecs(t *testing.T) {
@@ -26,6 +28,7 @@ func TestCodecs(t *testing.T) {
 		Uint32Value *wrappers.UInt32Value
 		Uint64Value *wrappers.UInt64Value
 		Timestamp   *timestamp.Timestamp
+		ObjectID    *mongodb.ObjectId
 	}
 
 	t.Run("marshal/unmarshal", func(t *testing.T) {
@@ -40,6 +43,8 @@ func TestCodecs(t *testing.T) {
 			return
 		}
 
+		id := mongodb.ObjectId{Id: "5c601716e1f2d109887d6db2"}
+
 		in := Data{
 			BoolValue:   &wrappers.BoolValue{Value: true},
 			BytesValue:  &wrappers.BytesValue{Value: make([]byte, 5)},
@@ -51,6 +56,7 @@ func TestCodecs(t *testing.T) {
 			Uint32Value: &wrappers.UInt32Value{Value: 12345},
 			Uint64Value: &wrappers.UInt64Value{Value: 123456789},
 			Timestamp:   ts,
+			ObjectID:    &id,
 		}
 
 		b, err := bson.MarshalWithRegistry(r, &in)

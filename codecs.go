@@ -9,6 +9,11 @@ import (
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/mongodb/mongo-go-driver/bson/bsoncodec"
 	"github.com/mongodb/mongo-go-driver/bson/bsonrw"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
+
+	// "github.com/mongodb/mongo-go-driver/bson/bsoncodec"
+
+	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
 )
 
 var (
@@ -29,9 +34,14 @@ var (
 	// Time type
 	timeType = reflect.TypeOf(time.Time{})
 
+	// ObjectId type
+	protoObjectIDType = reflect.TypeOf(mongodb.ObjectId{})
+	objectIDType      = reflect.TypeOf(primitive.ObjectID{})
+
 	// Codecs
 	wrapperValueCodec = &WrapperValueCodec{}
 	timestampCodec    = &TimestampCodec{}
+	objectIDCodec     = &ObjectIDCodec{}
 )
 
 // WrapperValueCodec is codec for Protobuf type wrappers
@@ -94,6 +104,43 @@ func (e *TimestampCodec) DecodeValue(ectx bsoncodec.DecodeContext, vr bsonrw.Val
 	return nil
 }
 
+// ObjectIDCodec is codec for Protobuf ObjectId
+type ObjectIDCodec struct {
+}
+
+// EncodeValue encodes Protobuf ObjectId value to BSON value
+func (e *ObjectIDCodec) EncodeValue(ectx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
+	v := val.Interface().(mongodb.ObjectId)
+	// Create primitive.ObjectId from string
+	id, err := primitive.ObjectIDFromHex(v.Id)
+	if err != nil {
+		return err
+	}
+	enc, err := ectx.LookupEncoder(objectIDType)
+	if err != nil {
+		return err
+	}
+	return enc.EncodeValue(ectx, vw, reflect.ValueOf(id))
+}
+
+// DecodeValue decodes BSON value to ObjectId value
+func (e *ObjectIDCodec) DecodeValue(ectx bsoncodec.DecodeContext, vr bsonrw.ValueReader, val reflect.Value) error {
+	enc, err := ectx.LookupDecoder(objectIDType)
+	if err != nil {
+		return err
+	}
+	var id primitive.ObjectID
+	if err = enc.DecodeValue(ectx, vr, reflect.ValueOf(&id).Elem()); err != nil {
+		return err
+	}
+	oid := mongodb.ObjectId{Id: id.Hex()}
+	if err != nil {
+		return err
+	}
+	val.Set(reflect.ValueOf(oid))
+	return nil
+}
+
 // Register registers Google protocol buffers types codecs
 func Register(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
 	return rb.RegisterCodec(boolValueType, wrapperValueCodec).
@@ -105,5 +152,6 @@ func Register(rb *bsoncodec.RegistryBuilder) *bsoncodec.RegistryBuilder {
 		RegisterCodec(stringValueType, wrapperValueCodec).
 		RegisterCodec(uint32ValueType, wrapperValueCodec).
 		RegisterCodec(uint64ValueType, wrapperValueCodec).
-		RegisterCodec(timestampType, timestampCodec)
+		RegisterCodec(timestampType, timestampCodec).
+		RegisterCodec(protoObjectIDType, objectIDCodec)
 }

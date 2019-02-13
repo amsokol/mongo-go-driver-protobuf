@@ -1,0 +1,8 @@
+syntax="proto3";
+package mongodb;
+
+option go_package = "github.com/amsokol/mongo-go-driver-protobuf/mongodb";
+
+message ObjectId{
+    string id = 1;
+}
