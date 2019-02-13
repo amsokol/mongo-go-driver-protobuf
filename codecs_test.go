@@ -1,7 +1,6 @@
 package codecs
 
 import (
-	"encoding/json"
 	"reflect"
 	"testing"
 	"time"
@@ -77,22 +76,30 @@ func TestCodecs(t *testing.T) {
 			t.Errorf("failed: in=%#v, out=%#v", in, out)
 			return
 		}
-
-		if b, err = json.Marshal(&in); err != nil {
-			t.Errorf("json.Marshal error = %v", err)
-			return
-		}
-
-		var out2 Data
-		if err = json.Unmarshal(b, &out2); err != nil {
-			t.Errorf("json.Unmarshal error = %v", err)
-			return
-		}
-
-		if !reflect.DeepEqual(in, out2) {
-			t.Errorf("failed: in=%#v, out=%#v", in, out2)
-			return
-		}
 	})
 
+	/*
+		t.Run("marshal-jsonpb/unmarshal-jsonpb", func(t *testing.T) {
+			id := mongodb.ObjectId{Id: "5c601716e1f2d109887d6db2"}
+			in := Data{
+				ObjectID: &id,
+			}
+
+			if b, err = ptypes.MarshalAny(&in); err != nil {
+				t.Errorf("json.Marshal error = %v", err)
+				return
+			}
+
+			var out2 Data
+			if err = ptypes.UnmarshalAny(b, &out2); err != nil {
+				t.Errorf("json.Unmarshal error = %v", err)
+				return
+			}
+
+			if !reflect.DeepEqual(in, out2) {
+				t.Errorf("failed: in=%#v, out=%#v", in, out2)
+				return
+			}
+		})
+	*/
 }
