@@ -1,0 +1,31 @@
+syntax="proto3";
+package codecs;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+import "mongodb/objectid.proto";
+
+message TestData{
+    google.protobuf.BoolValue boolValue = 1;
+
+    google.protobuf.BytesValue bytesValue = 2;
+
+    google.protobuf.DoubleValue doubleValue = 4;
+
+    google.protobuf.FloatValue floatValue = 5;
+
+    google.protobuf.Int32Value int32Value = 6;
+
+    google.protobuf.Int64Value int64Value = 7;
+
+    google.protobuf.StringValue stringValue = 8;
+
+    google.protobuf.UInt32Value uint32Value = 9;
+
+    google.protobuf.UInt64Value uint64Value = 10;
+
+    google.protobuf.Timestamp timestamp = 3;
+
+    mongodb.ObjectId id = 11;
+}

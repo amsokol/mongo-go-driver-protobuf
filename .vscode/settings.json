@@ -1,15 +1,28 @@
 {
+    "protoc": {
+        "options": [
+            "--proto_path=proto",
+            "--proto_path=proto/third_party"
+        ]
+    },
     "cSpell.words": [
         "Fatalf",
         "Printf",
         "Uint",
+        "Unkeyed",
         "amsokol",
         "bson",
         "bsoncodec",
+        "bsonrw",
+        "ectx",
+        "gzipped",
+        "jsonpb",
         "mongodb",
+        "objectid",
         "officional",
         "proto",
         "protobuf",
+        "protoc",
         "ptypes",
         "struct",
         "tspb",

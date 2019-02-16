@@ -1,14 +1,16 @@
 package codecs
 
 import (
+	"bytes"
 	"reflect"
 	"testing"
 	"time"
 
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 
 	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
 )
@@ -17,55 +19,55 @@ func TestCodecs(t *testing.T) {
 	rb := bson.NewRegistryBuilder()
 	r := Register(rb).Build()
 
-	type Data struct {
-		BoolValue   *wrappers.BoolValue
-		BytesValue  *wrappers.BytesValue
-		DoubleValue *wrappers.DoubleValue
-		FloatValue  *wrappers.FloatValue
-		Int32Value  *wrappers.Int32Value
-		Int64Value  *wrappers.Int64Value
-		StringValue *wrappers.StringValue
-		Uint32Value *wrappers.UInt32Value
-		Uint64Value *wrappers.UInt64Value
-		Timestamp   *timestamp.Timestamp
-		ObjectID    *mongodb.ObjectId
+	tm := time.Now()
+	// BSON accuracy is in milliseconds
+	tm = time.Date(tm.Year(), tm.Month(), tm.Day(), tm.Hour(), tm.Minute(), tm.Second(),
+		(tm.Nanosecond()/1000000)*1000000, tm.Location())
+
+	ts, err := ptypes.TimestampProto(tm)
+	if err != nil {
+		t.Errorf("ptypes.TimestampProto error = %v", err)
+		return
 	}
 
-	t.Run("marshal/unmarshal", func(t *testing.T) {
-		tm := time.Now()
-		// BSON accuracy is in milliseconds
-		tm = time.Date(tm.Year(), tm.Month(), tm.Day(), tm.Hour(), tm.Minute(), tm.Second(),
-			(tm.Nanosecond()/1000000)*1000000, tm.Location())
+	objectID := primitive.NewObjectID()
+	id := mongodb.ObjectId{Value: objectID.Hex()}
 
-		ts, err := ptypes.TimestampProto(tm)
+	t.Run("primitive object id", func(t *testing.T) {
+		resultID, err := id.GetPrimitiveObjectID()
 		if err != nil {
-			t.Errorf("ptypes.TimestampProto error = %v", err)
+			t.Errorf("mongodb.ObjectId.GetPrimitiveObjectID() error = %v", err)
 			return
 		}
 
-		id := mongodb.ObjectId{Value: "5c601716e1f2d109887d6db2"}
-
-		in := Data{
-			BoolValue:   &wrappers.BoolValue{Value: true},
-			BytesValue:  &wrappers.BytesValue{Value: make([]byte, 5)},
-			DoubleValue: &wrappers.DoubleValue{Value: 1.2},
-			FloatValue:  &wrappers.FloatValue{Value: 1.3},
-			Int32Value:  &wrappers.Int32Value{Value: -12345},
-			Int64Value:  &wrappers.Int64Value{Value: -123456789},
-			StringValue: &wrappers.StringValue{Value: "qwerty"},
-			Uint32Value: &wrappers.UInt32Value{Value: 12345},
-			Uint64Value: &wrappers.UInt64Value{Value: 123456789},
-			Timestamp:   ts,
-			ObjectID:    &id,
+		if !reflect.DeepEqual(objectID, resultID) {
+			t.Errorf("failed: primitive object ID=%#v, ID=%#v", objectID, id)
+			return
 		}
+	})
 
+	in := TestData{
+		BoolValue:   &wrappers.BoolValue{Value: true},
+		BytesValue:  &wrappers.BytesValue{Value: make([]byte, 5)},
+		DoubleValue: &wrappers.DoubleValue{Value: 1.2},
+		FloatValue:  &wrappers.FloatValue{Value: 1.3},
+		Int32Value:  &wrappers.Int32Value{Value: -12345},
+		Int64Value:  &wrappers.Int64Value{Value: -123456789},
+		StringValue: &wrappers.StringValue{Value: "qwerty"},
+		Uint32Value: &wrappers.UInt32Value{Value: 12345},
+		Uint64Value: &wrappers.UInt64Value{Value: 123456789},
+		Timestamp:   ts,
+		Id:          &id,
+	}
+
+	t.Run("marshal/unmarshal", func(t *testing.T) {
 		b, err := bson.MarshalWithRegistry(r, &in)
 		if err != nil {
 			t.Errorf("bson.MarshalWithRegistry error = %v", err)
 			return
 		}
 
-		var out Data
+		var out TestData
 
 		if err = bson.UnmarshalWithRegistry(r, b, &out); err != nil {
 			t.Errorf("bson.UnmarshalWithRegistry error = %v", err)
@@ -78,28 +80,25 @@ func TestCodecs(t *testing.T) {
 		}
 	})
 
-	/*
-		t.Run("marshal-jsonpb/unmarshal-jsonpb", func(t *testing.T) {
-			id := mongodb.ObjectId{Id: "5c601716e1f2d109887d6db2"}
-			in := Data{
-				ObjectID: &id,
-			}
+	t.Run("marshal-jsonpb/unmarshal-jsonpb", func(t *testing.T) {
+		var b bytes.Buffer
 
-			if b, err = ptypes.MarshalAny(&in); err != nil {
-				t.Errorf("json.Marshal error = %v", err)
-				return
-			}
+		m := &jsonpb.Marshaler{}
 
-			var out2 Data
-			if err = ptypes.UnmarshalAny(b, &out2); err != nil {
-				t.Errorf("json.Unmarshal error = %v", err)
-				return
-			}
+		if err := m.Marshal(&b, &in); err != nil {
+			t.Errorf("jsonpb.Marshaler.Marshal error = %v", err)
+			return
+		}
 
-			if !reflect.DeepEqual(in, out2) {
-				t.Errorf("failed: in=%#v, out=%#v", in, out2)
-				return
-			}
-		})
-	*/
+		var out TestData
+		if err = jsonpb.Unmarshal(&b, &out); err != nil {
+			t.Errorf("jsonpb.Unmarshal error = %v", err)
+			return
+		}
+
+		if !reflect.DeepEqual(in, out) {
+			t.Errorf("failed: in=%#v, out=%#v", in, out)
+			return
+		}
+	})
 }
