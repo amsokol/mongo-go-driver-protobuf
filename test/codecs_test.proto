@@ -1,12 +1,12 @@
 syntax="proto3";
-package codecs;
+package test;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 import "mongodb/objectid.proto";
 
-message TestData{
+message Data{
     google.protobuf.BoolValue boolValue = 1;
 
     google.protobuf.BytesValue bytesValue = 2;

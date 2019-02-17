@@ -13,6 +13,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/bson/primitive"
 
 	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
+	"github.com/amsokol/mongo-go-driver-protobuf/test"
 )
 
 func TestCodecs(t *testing.T) {
@@ -34,7 +35,7 @@ func TestCodecs(t *testing.T) {
 	id := mongodb.ObjectId{Value: objectID.Hex()}
 
 	t.Run("primitive object id", func(t *testing.T) {
-		resultID, err := id.GetPrimitiveObjectID()
+		resultID, err := id.GetObjectID()
 		if err != nil {
 			t.Errorf("mongodb.ObjectId.GetPrimitiveObjectID() error = %v", err)
 			return
@@ -46,7 +47,7 @@ func TestCodecs(t *testing.T) {
 		}
 	})
 
-	in := TestData{
+	in := test.Data{
 		BoolValue:   &wrappers.BoolValue{Value: true},
 		BytesValue:  &wrappers.BytesValue{Value: make([]byte, 5)},
 		DoubleValue: &wrappers.DoubleValue{Value: 1.2},
@@ -67,7 +68,7 @@ func TestCodecs(t *testing.T) {
 			return
 		}
 
-		var out TestData
+		var out test.Data
 
 		if err = bson.UnmarshalWithRegistry(r, b, &out); err != nil {
 			t.Errorf("bson.UnmarshalWithRegistry error = %v", err)
@@ -90,7 +91,7 @@ func TestCodecs(t *testing.T) {
 			return
 		}
 
-		var out TestData
+		var out test.Data
 		if err = jsonpb.Unmarshal(&b, &out); err != nil {
 			t.Errorf("jsonpb.Unmarshal error = %v", err)
 			return
