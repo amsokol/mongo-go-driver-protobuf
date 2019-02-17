@@ -11,21 +11,21 @@ message Data{
 
     google.protobuf.BytesValue bytesValue = 2;
 
-    google.protobuf.DoubleValue doubleValue = 4;
+    google.protobuf.DoubleValue doubleValue = 3;
 
-    google.protobuf.FloatValue floatValue = 5;
+    google.protobuf.FloatValue floatValue = 4;
 
-    google.protobuf.Int32Value int32Value = 6;
+    google.protobuf.Int32Value int32Value = 5;
 
-    google.protobuf.Int64Value int64Value = 7;
+    google.protobuf.Int64Value int64Value = 6;
 
-    google.protobuf.StringValue stringValue = 8;
+    google.protobuf.StringValue stringValue = 7;
 
-    google.protobuf.UInt32Value uint32Value = 9;
+    google.protobuf.UInt32Value uint32Value = 8;
 
-    google.protobuf.UInt64Value uint64Value = 10;
+    google.protobuf.UInt64Value uint64Value = 9;
 
-    google.protobuf.Timestamp timestamp = 3;
+    google.protobuf.Timestamp timestamp = 10;
 
     mongodb.ObjectId id = 11;
 }
