@@ -1,9 +1,10 @@
-module github.com/amsokol/mongo-go-driver-protobuf
+module github.com/amsokol/mongo-go-driver-protobuf/examples/mongodb-rw
 
 go 1.12
 
 require (
-	github.com/go-stack/stack v1.8.0 // indirect
+	github.com/amsokol/mongo-go-driver-protobuf v0.0.0-20190217043000-59e5d93ea61a
+	github.com/amsokol/protoc-gen-gotag v0.2.1
 	github.com/golang/protobuf v1.2.1-0.20190205222052-c823c79ea157
 	github.com/golang/snappy v0.0.0-20180518054509-2e65f85255db // indirect
 	github.com/mongodb/mongo-go-driver v0.3.0
