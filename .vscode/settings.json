@@ -16,6 +16,7 @@
         "bsoncodec",
         "bsonrw",
         "ectx",
+        "gotag",
         "gzipped",
         "jsonpb",
         "mongodb",
