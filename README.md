@@ -26,7 +26,7 @@ It contains set of BSON marshal/unmarshal codecs for Google protocol buffers typ
 
 ## Links
 
-- Official MongoDB Go Driver: [https://github.com/mongodb/mongo-go-driver](https://github.com/mongodb/mongo-go-driver)
+- Official MongoDB Go Driver: [https://go.mongodb.org/mongo-driver](https://go.mongodb.org/mongo-driver)
 - Google protocol buffers types (wrappers): [https://github.com/golang/protobuf/blob/master/ptypes/wrappers/wrappers.proto](https://github.com/golang/protobuf/blob/master/ptypes/wrappers/wrappers.proto)
 - Google protocol buffers Timestamp type: [https://github.com/golang/protobuf/blob/master/ptypes/timestamp/timestamp.proto](https://github.com/golang/protobuf/blob/master/ptypes/timestamp/timestamp.proto)
 - MongoDB ObjectID type: [https://github.com/mongodb/mongo-go-driver/blob/master/bson/primitive/objectid.go](https://github.com/mongodb/mongo-go-driver/blob/master/bson/primitive/objectid.go)
@@ -35,7 +35,7 @@ It contains set of BSON marshal/unmarshal codecs for Google protocol buffers typ
 ## Requirements
 
 - Google protocol buffers version `proto3`
-- Official MongoDB Go Driver Beta 2 or higher
+- Official MongoDB Go Driver RC1 or higher
 
 ## Installation
 

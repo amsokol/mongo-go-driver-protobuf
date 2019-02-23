@@ -10,9 +10,9 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/wrappers"
 
-	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/mongo"
-	"github.com/mongodb/mongo-go-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/amsokol/mongo-go-driver-protobuf"
 )
@@ -26,10 +26,10 @@ func main() {
 	// Create MongoDB client with registered custom codecs for protobuf Timestamp and wrapper types
 	// NOTE: "mongodb+srv" protocol means connect to Altas cloud MongoDB server
 	//       use just "mongodb" if you connect to on-premise MongoDB server
-	client, err := mongo.NewClientWithOptions("mongodb+srv://USER:PASSWORD@SERVER/experiments",
-		&options.ClientOptions{
-			Registry: reg,
-		})
+	client, err := mongo.NewClient(options.Client().
+		ApplyURI("mongodb+srv://USER:PASSWORD@SERVER/experiments").
+		SetRegistry(reg),
+	)
 
 	if err != nil {
 		log.Fatalf("failed to create new MongoDB client: %#v", err)
