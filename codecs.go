@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/bsonrw"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
+	"github.com/amsokol/mongo-go-driver-protobuf/pmongo"
 )
 
 var (
@@ -33,7 +33,7 @@ var (
 	timeType = reflect.TypeOf(time.Time{})
 
 	// ObjectId type
-	objectIDType          = reflect.TypeOf(mongodb.ObjectId{})
+	objectIDType          = reflect.TypeOf(pmongo.ObjectId{})
 	objectIDPrimitiveType = reflect.TypeOf(primitive.ObjectID{})
 
 	// Codecs
@@ -108,7 +108,7 @@ type objectIDCodec struct {
 
 // EncodeValue encodes Protobuf ObjectId value to BSON value
 func (e *objectIDCodec) EncodeValue(ectx bsoncodec.EncodeContext, vw bsonrw.ValueWriter, val reflect.Value) error {
-	v := val.Interface().(mongodb.ObjectId)
+	v := val.Interface().(pmongo.ObjectId)
 	// Create primitive.ObjectId from string
 	id, err := primitive.ObjectIDFromHex(v.Value)
 	if err != nil {
@@ -131,7 +131,7 @@ func (e *objectIDCodec) DecodeValue(ectx bsoncodec.DecodeContext, vr bsonrw.Valu
 	if err = enc.DecodeValue(ectx, vr, reflect.ValueOf(&id).Elem()); err != nil {
 		return err
 	}
-	oid := mongodb.ObjectId{Value: id.Hex()}
+	oid := *pmongo.NewObjectId(id)
 	if err != nil {
 		return err
 	}

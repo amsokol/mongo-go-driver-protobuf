@@ -1,7 +1,7 @@
 syntax="proto3";
 package mongodb;
 
-option go_package = "github.com/amsokol/mongo-go-driver-protobuf/mongodb";
+option go_package = "github.com/amsokol/mongo-go-driver-protobuf/pmongo";
 
 message ObjectId{
     string value = 1;

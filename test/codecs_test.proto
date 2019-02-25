@@ -4,7 +4,7 @@ package test;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-import "mongodb/objectid.proto";
+import "pmongo/objectid.proto";
 
 message Data{
     google.protobuf.BoolValue boolValue = 1;

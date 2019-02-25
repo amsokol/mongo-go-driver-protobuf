@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "protoc-gen-gotag/tagger/tagger.proto";
 
-import "mongodb/objectid.proto";
+import "pmongo/objectid.proto";
 
 message Data{
     mongodb.ObjectId id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];

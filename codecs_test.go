@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/amsokol/mongo-go-driver-protobuf/mongodb"
+	"github.com/amsokol/mongo-go-driver-protobuf/pmongo"
 	"github.com/amsokol/mongo-go-driver-protobuf/test"
 )
 
@@ -32,7 +32,7 @@ func TestCodecs(t *testing.T) {
 	}
 
 	objectID := primitive.NewObjectID()
-	id := mongodb.ObjectId{Value: objectID.Hex()}
+	id := pmongo.NewObjectId(objectID)
 
 	t.Run("primitive object id", func(t *testing.T) {
 		resultID, err := id.GetObjectID()
@@ -58,7 +58,7 @@ func TestCodecs(t *testing.T) {
 		Uint32Value: &wrappers.UInt32Value{Value: 12345},
 		Uint64Value: &wrappers.UInt64Value{Value: 123456789},
 		Timestamp:   ts,
-		Id:          &id,
+		Id:          id,
 	}
 
 	t.Run("marshal/unmarshal", func(t *testing.T) {
