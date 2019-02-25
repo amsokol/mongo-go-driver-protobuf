@@ -8,7 +8,7 @@ import "protoc-gen-gotag/tagger/tagger.proto";
 import "pmongo/objectid.proto";
 
 message Data{
-    mongodb.ObjectId id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
+    pmongo.ObjectId id = 1 [(tagger.tags) = "bson:\"_id,omitempty\"" ];
 
     bool boolValue = 2;
     google.protobuf.BoolValue boolProtoValue = 3;

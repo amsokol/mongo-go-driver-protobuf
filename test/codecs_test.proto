@@ -27,5 +27,5 @@ message Data{
 
     google.protobuf.Timestamp timestamp = 10;
 
-    mongodb.ObjectId id = 11;
+    pmongo.ObjectId id = 11;
 }
